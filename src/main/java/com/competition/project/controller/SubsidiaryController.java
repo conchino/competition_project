@@ -1,8 +1,10 @@
 package com.competition.project.controller;
 
+import com.competition.project.annotation.Log;
 import com.competition.project.dto.SubsidiaryDTO;
 import com.competition.project.entity.Department;
 import com.competition.project.entity.Position;
+import com.competition.project.enumeration.OperationType;
 import com.competition.project.service.DepartmentService;
 import com.competition.project.service.PositionService;
 import com.competition.project.service.SubsidiaryService;
@@ -70,7 +72,7 @@ public class SubsidiaryController {
         }else return Result.error().message("创建失败!");
     }
 
-
+    @Log(operationType = OperationType.DELETE, operationName = "删除公司及其下部门职位")
     @ApiOperation("删除公司并递归删除其下部门职位")
     @RequiresPermissions("user:perm_1")
     @RequestMapping(value = "/delSubById/{subId}",method = RequestMethod.GET)
@@ -96,6 +98,7 @@ public class SubsidiaryController {
         return Result.error().message("无对应的公司存在!");
     }
 
+    @Log(operationType = OperationType.UPDATE, operationName = "修改公司信息")
     @ApiOperation("修改公司信息")
     @RequiresPermissions("user:perm_1")
     @RequestMapping("/updateSubInfo")
@@ -113,6 +116,7 @@ public class SubsidiaryController {
         return Result.ok().data(departmentService.queryDepartBySub(belongs,current,limit));
     }
 
+    @Log(operationType = OperationType.SELECT, operationName = "模糊查询公司")
     @RequiresPermissions("user:perm_1")
     @RequestMapping(value = "/querySubsidiaryByInPut/{current}/{limit}", method = RequestMethod.GET)
     public Result querySubsidiaryByInPut(@RequestParam("info") String info,

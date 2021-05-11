@@ -2,9 +2,11 @@ package com.competition.project.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.competition.project.annotation.Log;
 import com.competition.project.entity.Department;
 import com.competition.project.entity.Employees;
 import com.competition.project.entity.Position;
+import com.competition.project.enumeration.OperationType;
 import com.competition.project.service.DepartmentService;
 import com.competition.project.service.EmployeesService;
 import com.competition.project.service.PositionService;
@@ -46,6 +48,7 @@ public class DepartmentController {
         return Result.ok().data(departmentService.queryDepartByPage(current,limit));
     }
 
+    @Log(operationType = OperationType.INSERT, operationName = "添加部门")
     @ApiOperation("添加部门")
     @RequiresPermissions("user:perm_1")
     @RequestMapping(value = "/addDepartment",method = RequestMethod.GET)
@@ -59,6 +62,7 @@ public class DepartmentController {
         return Result.error().message("创建失败!");
     }
 
+    @Log(operationType = OperationType.DELETE, operationName = "删除部门")
     @ApiOperation("删除部门")
     @RequiresPermissions("user:perm_1")
     @RequestMapping("/delDepartment/{departId}")
@@ -72,6 +76,7 @@ public class DepartmentController {
     }
 
 
+    @Log(operationType = OperationType.UPDATE, operationName = "更新部门信息")
     @ApiOperation("更新部门信息")
     @RequiresPermissions("user:perm_1")
     @RequestMapping("/updateDepartInfo")
@@ -86,6 +91,7 @@ public class DepartmentController {
         return Result.error().message("查询不到该部门!");
     }
 
+    @Log(operationType = OperationType.SELECT, operationName = "根据部门筛选员工")
     @ApiOperation("根据部门筛选员工")
     @RequiresPermissions("user:perm_1")
     @RequestMapping("/queryPostEmployByDepart")
@@ -110,6 +116,8 @@ public class DepartmentController {
         return Result.ok().data("departmentList", departmentDTOArrayList);
     }
 
+    @Log(operationType = OperationType.SELECT, operationName = "根据部门筛选员工")
+    @ApiOperation("模糊查询部门信息")
     @RequiresPermissions("user:perm_1")
     @RequestMapping(value = "/queryDepartmentByInPut",method = RequestMethod.GET)
     public Result queryDepartmentByInPut(@RequestParam("info") String info,

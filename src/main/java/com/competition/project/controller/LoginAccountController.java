@@ -1,8 +1,10 @@
 package com.competition.project.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.competition.project.annotation.Log;
 import com.competition.project.dto.EmployeesDTO;
 import com.competition.project.entity.Employees;
+import com.competition.project.enumeration.OperationType;
 import com.competition.project.service.*;
 import com.competition.project.utils.Result;
 import org.apache.ibatis.annotations.Param;
@@ -101,6 +103,7 @@ public class LoginAccountController {
 
 
     // 同意账号申请
+    @Log(operationType = OperationType.UPDATE, operationName = "同意账号申请")
     @RequiresPermissions("user:perm_1")
     @RequestMapping(value = "agreeApply",method = RequestMethod.GET)
     public Result agreeApply(@RequestParam("account") String account) {
@@ -112,6 +115,7 @@ public class LoginAccountController {
     }
 
     // 拒绝账号申请
+    @Log(operationType = OperationType.DEFAULT, operationName = "拒绝账号申请")
     @RequiresPermissions("user:perm_1")
     @RequestMapping("unAgreeApply")
     public Result unAgreeApply(@Param("account") String account) {

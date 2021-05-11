@@ -39,18 +39,20 @@ public class WebLogAspect {
 
     private final Logger logger = LoggerFactory.getLogger(WebLogAspect.class);
 
-    @Pointcut("execution(public * com.competition.project.controller..*.*(..))")
+    @Pointcut("execution(public * com.competition.project.controller..*(..))")
     public void controllerLog(){}
 
     /* 选中 EmployeesController中所有的方法 */
     @Pointcut("execution(public * com.competition.project.controller.EmployeesController.*(..))")
     public void EmployeesControllerLog(){}
 
+
 //    @Before("controllerLog() || EmployeesControllerLog()")
-    @Before("EmployeesControllerLog()")
+    @Before("controllerLog()")
     public void logBeforeController(JoinPoint joinPoint) throws UnknownHostException {
         // 历史记录对象
         History historyObj = new History();
+        List<String> infoList = new ArrayList<>();
 
         String timestamp = String.valueOf(new Date().getTime());
         historyObj.setHistoryId(timestamp);
@@ -58,22 +60,29 @@ public class WebLogAspect {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
 
-        logger.info("URL : " + request.getRequestURL().toString());
+//        logger.info("URL : " + request.getRequestURL().toString());
+        infoList.add("URL : " + request.getRequestURL().toString());
         historyObj.setOperatorAddress(request.getRequestURL().toString());
 
-        logger.info("request方法 : " + request.getMethod());
+//        logger.info("request方法 : " + request.getMethod());
+        infoList.add("request方法 : " + request.getMethod());
 
-        logger.info("IP地址 : " + IpUtils.getIpAddress(request) + " || " + InetAddress.getLocalHost().getHostAddress());
-        logger.info("请求参数 : " + Arrays.toString(joinPoint.getArgs()));
+//        logger.info("IP地址 : " + IpUtils.getIpAddress(request) + " || " + InetAddress.getLocalHost().getHostAddress());
+//        logger.info("请求参数 : " + Arrays.toString(joinPoint.getArgs()));
+        infoList.add("IP地址 : " + IpUtils.getIpAddress(request) + " || " + InetAddress.getLocalHost().getHostAddress());
+        infoList.add("请求参数 : " + Arrays.toString(joinPoint.getArgs()));
         /*  getSignature().getDeclaringTypeName()  获取包+类名
             joinPoint.getSignature.getName()  获取方法名
         */
-        logger.info("请求方法 : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-        logger.info("具体方法: "+joinPoint.getSignature().getName());
+//        logger.info("请求方法 : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+//        logger.info("具体方法: "+joinPoint.getSignature().getName());
+        infoList.add("请求方法 : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+        infoList.add("具体方法: "+joinPoint.getSignature().getName());
+
         historyObj.setOperationMethod(joinPoint.getSignature().getName());
 
         HttpSession session = (HttpSession) requestAttributes.resolveReference(RequestAttributes.REFERENCE_SESSION);
-        logger.info("sessionId -- "+session.getId());
+//        logger.info("sessionId -- "+session.getId());
 
         // 获取请求参数名以及对应值
         Enumeration<String> enumeration = request.getParameterNames();
@@ -84,7 +93,8 @@ public class WebLogAspect {
             parameterMap.put(parameter, request.getParameter(parameter));
         }
         String parameter = JSON.toJSONString(parameterMap);
-        logger.info("参数parameter: "+parameter);
+//        logger.info("参数parameter: "+parameter);
+        infoList.add("参数parameter: "+parameter);
         historyObj.setParameter(parameter);
 
         // 获取Cookies中的token
@@ -109,7 +119,8 @@ public class WebLogAspect {
             Map<String, Claim> claims = JwtUtil.getClaims(token);
             String name = claims.get("name").asString();
             String workId = claims.get("workId").asString();
-            logger.info("操作用户: "+name);
+//            logger.info("操作用户: "+name);
+            infoList.add("操作用户: "+name);
             historyObj.setOperator(name+"|"+workId);
 
             OperationType operationType = method.getAnnotation(Log.class).operationType();
@@ -118,15 +129,20 @@ public class WebLogAspect {
             historyObj.setOperationType(operationType.getType());
             historyObj.setDescription(operationName);
 
-            logger.info("操作方法类型: "+operationType);
-            logger.info("操作方法描述: "+operationName);
+//            logger.info("操作方法类型: "+operationType);
+//            logger.info("操作方法描述: "+operationName);
+            infoList.add("操作方法类型: "+operationType);
+            infoList.add("操作方法描述: "+operationName);
 
-            logger.info("时间戳序号: "+ timestamp);
-            logger.info("操作时间: "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date().getTime()));
+//            logger.info("时间戳序号: "+ timestamp);
+//            logger.info("操作时间: "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date().getTime()));
+            infoList.add("时间戳序号: "+ timestamp);
+            infoList.add("操作时间: "+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date().getTime()));
             // 记录操作信息
             historyService.addHistoryRecords(historyObj);
         }
 
+        logger.info("[请求信息]  "+infoList.toString());
 
     }
 }
