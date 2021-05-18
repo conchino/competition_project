@@ -105,4 +105,9 @@ public class Employees implements Serializable {
     public Employees(String depart){
         this.depart = depart;
     }
+    public Employees(String post, String depart, String company){
+        this.post = post;
+        this.depart = depart;
+        this.company = company;
+    }
 }

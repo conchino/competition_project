@@ -59,7 +59,7 @@ public class CustomRealm extends AuthorizingRealm {
         if (userName == null) {
             throw new AccountException("用户名不正确");
         }else if (loginAccountService.judgeAccountByCode(userName)){
-            throw new UnknownAccountException("该账号不存在");
+            throw new UnknownAccountException("账号错误");
         }
         //根据账号从数据库获取对象
         LoginAccount loginAccount = loginAccountService.getLoginByAccount(userName);

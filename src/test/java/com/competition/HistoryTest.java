@@ -6,8 +6,6 @@ import com.competition.project.service.HistoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -30,7 +28,11 @@ public class HistoryTest {
         for (History history : historyService.queryAllHistory()) {
             dtoArrayList.add(new HistoryDTO(history));
         }
-        System.out.println(dtoArrayList);
+
+        for (HistoryDTO dto : dtoArrayList) {
+            System.out.println(dto);
+        }
     }
+
 
 }

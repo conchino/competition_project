@@ -66,4 +66,6 @@ public interface EmployeesService extends IService<Employees> {
 
     /* 统计子公司最大员工量 */
     Integer statisticsEmployeesCount();
+    /* 调度员工 */
+    Boolean dispatchStaff(String workId, String post, String depart, String company);
 }

@@ -14,6 +14,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ public class MyHandlerInterceptor implements HandlerInterceptor {
         String IpPath = IpUtils.getIpAddress(request);
 
         List<String> list = new ArrayList<>();
+        Map<String, Object> infoMap = new HashMap<>();
 
 //        logger.info("MyHandlerInterceptor -- 拦截器生效...");
         list.add("访问path: "+path+",  Ip: "+IpPath);

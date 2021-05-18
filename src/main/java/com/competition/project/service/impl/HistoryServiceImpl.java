@@ -1,5 +1,6 @@
 package com.competition.project.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.competition.project.entity.History;
 import com.competition.project.mapper.HistoryMapper;
@@ -34,7 +35,9 @@ public class HistoryServiceImpl extends ServiceImpl<HistoryMapper, History> impl
 
     @Override
     public List<History> queryAllHistory() {
-        return historyService.list();
+        QueryWrapper<History> wrapper = new QueryWrapper<>();
+        wrapper.ne("operator", "admin|###");
+        return historyService.list(wrapper);
     }
 
     @Override
@@ -46,4 +49,5 @@ public class HistoryServiceImpl extends ServiceImpl<HistoryMapper, History> impl
         map.put("total", historyPage.getTotal());
         return map;
     }
+
 }

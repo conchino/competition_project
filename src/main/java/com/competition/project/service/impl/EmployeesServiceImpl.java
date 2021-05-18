@@ -228,4 +228,11 @@ public class EmployeesServiceImpl extends ServiceImpl<EmployeesMapper, Employees
         }
         return Collections.max(list);
     }
+
+    @Override
+    public Boolean dispatchStaff(String workId, String post, String depart, String company) {
+        QueryWrapper<Employees> wrapper = new QueryWrapper<>();
+        wrapper.eq("work_id",workId);
+        return employeesService.update(new Employees(post, depart, company),wrapper);
+    }
 }

@@ -80,4 +80,11 @@ public class EmployeesTest {
     public void statisticsEmployeesCount(){
         System.out.println(employeesService.statisticsEmployeesCount());
     }
+
+    @Test
+    public void dispatchStaff(){
+        if (employeesService.dispatchStaff("148357","112","303","003")) {
+            System.out.println("success~~");
+        }
+    }
 }
